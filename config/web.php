@@ -66,7 +66,7 @@ $config = [
             'rules' => [
                 [
                     'class' => 'yii\rest\UrlRule',
-                    'controller' => ['api/users', 'api/auth'],
+                    'controller' => ['api/users', 'api/auth', 'api/clientes', 'api/produtos'],
                     'pluralize' => false
                 ]
             ],

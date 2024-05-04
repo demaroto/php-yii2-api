@@ -17,9 +17,12 @@ class m240419_191727_create_produtos_migration extends Migration
             'nome' => $this->string()->notNull(),
             'preco' => $this->double(8)->notNull(),
             'foto' => $this->string(),
+            'cliente_id' => $this->integer(),
             'created_at' => $this->dateTime(),
             'updated_at' => $this->dateTime()
         ]);
+
+        $this->addForeignKey('fk_produtos_cliente_id', 'produtos', 'cliente_id', 'clientes', 'id');
     }
 
     /**
@@ -27,6 +30,7 @@ class m240419_191727_create_produtos_migration extends Migration
      */
     public function safeDown()
     {
+        $this->dropForeignKey('fk_produtos_cliente_id', 'produtos');
         $this->dropTable('produtos');
     }
 

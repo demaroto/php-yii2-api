@@ -3,8 +3,10 @@
 namespace app\modules\api\controllers;
 
 use app\models\User;
+use app\modules\api\helpers\Response;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
 
@@ -17,8 +19,10 @@ class UsersController extends ActiveController
     {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
-            'class' => HttpBearerAuth::class
+            'class' => HttpBearerAuth::class,
+            'except' => ['create']
         ];
+        $behaviors[] =  TimestampBehavior::class;
         return $behaviors;
     }
 
@@ -30,83 +34,67 @@ class UsersController extends ActiveController
     public function actionIndex()
     {
         return Yii::$app->user->can('view-user') ?
-            $this->responseJson(200, User::find()->all()) :
-            $this->responseJson(401, 'Você não tem autorização para visualizar os usuários');
+            Response::JSON(200, User::find()->where(['status' => 1])->all()) :
+            Response::JSON(401, 'Você não tem autorização para visualizar os usuários');
     }
 
     public function actionView($id)
     {
-        return Yii::$app->user->can('view-user', ['user' => $id]) ?
-            $this->responseJson(200, User::findOne(['id' => $id])) :
-            $this->responseJson(401, 'Você não tem autorização para visualizar este usuário');
+        if (!Yii::$app->user->can('view-user', ['user' => $id])) 
+            Response::JSON(401, 'Você não tem autorização para visualizar este usuário');
+            $user = User::findOne(['id' => $id, 'status' => 1]);
+            $user ? Response::JSON(200, User::findOne($user)) :  Response::JSON(404, 'Usuário não encontrado.');
     }
 
     public function actionCreate()
     {
 
-        if (!Yii::$app->user->can('create-user'))
-            return $this->responseJson(401, 'Você não tem autorização para criar um usuário');
-
-        $auth = Yii::$app->authManager;
         $newUser = new User();
 
         $newUser->nome = Yii::$app->request->post('nome');
         $newUser->email = Yii::$app->request->post('email');
         $newUser->password = Yii::$app->request->post('password');
+       
         if ($newUser->validate()) {
             $newUser->setPassword(Yii::$app->request->post('password'));
             $newUser->save();
-            $this->addRoleToUser($newUser->id);
-            $this->responseJson(201, $newUser);
+   
+            Response::JSON(201, $newUser);
         } else {
             foreach ($newUser->errors as $error) {
                 $listtErrors[] = $error[0];
             }
-            $this->responseJson(400, $listtErrors[0]);
+            Response::JSON(400, $listtErrors[0]);
         }
     }
 
     public function actionUpdate($id)
     {
         if (!Yii::$app->user->can('edit-user', ['user' => $id]))
-            return $this->responseJson(401, 'Você não tem autorização para editar outro usuário.');
+            return Response::JSON(401, 'Você não tem autorização para editar outro usuário.');
 
         $user = User::findOne(['id' => $id]);
         $user->attributes = Yii::$app->request->post();
         if ($user->validate()) {
             $user->save();
-            return $this->responseJson(200, "Usuário editado com sucesso!");
+            return Response::JSON(200, "Usuário editado com sucesso!");
         } else {
             foreach ($user->errors as $error) {
                 $listtErrors[] = $error[0];
             }
-            return $this->responseJson(400, $listtErrors[0]);
+            return Response::JSON(400, $listtErrors[0]);
         }
     }
 
     public function actionDelete($id)
     {
         if (!Yii::$app->user->can('delete-user'))
-            return $this->responseJson(401, 'Você não tem autorização para apagar um usuário.');
+            return Response::JSON(401, 'Você não tem autorização para apagar um usuário.');
         $user = User::findOne(['id' => $id]);
-        if (!$user) return $this->responseJson(404, 'Usuário não encontrado.');
-        User::findOne(['id' => $id])->delete();
-        return $this->responseJson(204);
+        if (!$user) return Response::JSON(404, 'Usuário não encontrado.');
+        $user->status = 0;
+        $user->save();
+        return Response::JSON(204);
     }
-
-    private function addRoleToUser($userId, $role = 'user')
-    {
-        $auth = Yii::$app->authManager;
-        $auth->assign($auth->getRole($role), $userId);
-    }
-
-    private function responseJson($statusCode, $message = "")
-    {
-        $response = Yii::$app->response;
-        $response->format = \yii\web\Response::FORMAT_JSON;
-        $response->statusCode = $statusCode;
-        $hasError = $statusCode < 400 ? false : true;
-        $statusMessage = $hasError ? 'error' : 'success';
-        $response->data = ['status' => $statusMessage, 'data' => $message];
-    }
+    
 }

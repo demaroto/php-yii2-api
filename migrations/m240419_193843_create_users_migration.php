@@ -18,6 +18,7 @@ class m240419_193843_create_users_migration extends Migration
             'email' => $this->string(100)->notNull(),
             'password' => $this->string()->notNull(),
             'token' => $this->string(),
+            'status' => $this->tinyInteger()->defaultValue(1),
             'expire_at' => $this->integer(11),
             'created_at' => $this->integer(11),
             'updated_at' => $this->integer(11)
@@ -25,8 +26,10 @@ class m240419_193843_create_users_migration extends Migration
 
         $this->insert('usuarios', [
             'nome' => 'Administrador',
-            'email' => 'admin@coalize.com.br',
-            'password' => Yii::$app->security->generatePasswordHash('admin')
+            'email' => 'admin@email.com.br',
+            'password' => Yii::$app->security->generatePasswordHash('admin'),
+            'updated_at' => strtotime('now'),
+            'created_at' => strtotime('now')
         ]);
     }
 
@@ -36,6 +39,7 @@ class m240419_193843_create_users_migration extends Migration
     public function safeDown()
     {
        $this->dropTable('usuarios');
+    
     }
 
     /*

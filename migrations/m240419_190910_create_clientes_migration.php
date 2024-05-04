@@ -14,7 +14,7 @@ class m240419_190910_create_clientes_migration extends Migration
     {
         $this->createTable('clientes', [
             'id' => $this->primaryKey(),
-            'name' => $this->string(100)->notNull(),
+            'nome' => $this->string(100)->notNull(),
             'cpf' => $this->string()->notNull(),
             'cep' => $this->integer(),
             'logradouro' => $this->string()->notNull(),
@@ -24,9 +24,12 @@ class m240419_190910_create_clientes_migration extends Migration
             'estado' => $this->char(2),
             'foto' => $this->string(),
             'sexo' => $this->char(1),
-            'create_at' => $this->dateTime(),
-            'update_at' => $this->dateTime()
+            'user_id' => $this->integer()->notNull(),
+            'created_at' => $this->dateTime(),
+            'updated_at' => $this->dateTime()
         ]);
+
+     
     }
 
     /**
@@ -34,6 +37,7 @@ class m240419_190910_create_clientes_migration extends Migration
      */
     public function safeDown()
     {
+      
         $this->dropTable('clientes');
     }
 

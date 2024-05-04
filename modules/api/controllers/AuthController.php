@@ -3,6 +3,8 @@
 namespace app\modules\api\controllers;
 
 use app\models\User;
+use app\modules\api\helpers\Response;
+
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\rest\ActiveController;
@@ -35,21 +37,18 @@ class AuthController extends ActiveController
             
             if ($user && $user->validatePassword($request['password'])) {
                 $token =  $user->getAuthKey();
-                $response = Yii::$app->response;
-                $response->format = \yii\web\Response::FORMAT_JSON;
-                $response->statusCode = 200;
-                $response->data = ['token' => $token, 'type' => 'bearer'];
+                $result = ['token' => $token, 'type' => 'bearer'];
+                Response::JSON(200, $result);
             } else {
-                $response = Yii::$app->response;
-                $response->format = \yii\web\Response::FORMAT_JSON;
-                $response->statusCode = 400;
-                $response->data = ['error' => 'Login inválido'];
+
+                $result = ['error' => 'Login inválido'];
+                Response::JSON(400, $result);
             }
         } else {
-            $response = Yii::$app->response;
-            $response->format = \yii\web\Response::FORMAT_JSON;
-            $response->statusCode = 400;
-            $response->data = ['error' => 'campos email e password são obrigatórios'];
+
+            $result = ['error' => 'campos email e password são obrigatórios'];
+            Response::JSON(400, $result);
+            
         }
     }
 

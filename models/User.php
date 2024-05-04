@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\modules\api\model\Cliente;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -9,7 +10,7 @@ use yii\db\ActiveRecord;
 class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
 
-    private $tokenExpiration = 60 * 24 * 1; //Um dia
+    private $tokenExpiration = 60 * 60 * 24 * 1; //Um dia
     public static function tableName()
     {
         return 'usuarios';
@@ -22,6 +23,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
             'nome',
             'email',
             'token',
+            'status'
         ];
     }
 
@@ -32,6 +34,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
             ['token', 'string', 'max' => 32],
             ['password', 'string', 'min' => 6],
             ['email', 'email'],
+            ['status', 'number', 'min' => 0, 'max' => 1],
             ['email', 'string', 'max' => 100],
             ['email', 'unique']
         ];
@@ -77,7 +80,9 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        return static::findOne(['token' => $token]);
+        $access = static::find()->where(['token' => $token])->andWhere(['>', 'expire_at', strtotime('now')])->one();
+        if (!$access) return $access;
+        return static::findOne(['id' => $access->id]);
     }
 
     public static function loginByAccessToken($token, $type = null)
@@ -108,7 +113,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     {
         return $this->validateAuthKey($this->token) ? $this->token : $this->generateAuthKey();
     }
-
+    
     /**
      * {@inheritdoc}
      */
@@ -135,5 +140,10 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     public static function findByEmail($email)
     {
         return static::findOne(['email' => $email]);
+    }
+
+    public function getClient()
+    {
+        return $this->hasOne(Cliente::class, ['user_id' => 'id']);
     }
 }

@@ -71,7 +71,6 @@ class RolesController extends \yii\web\Controller
 
     private function removeRoles()
     {
-
         $this->auth->removeAll();
     }
 
@@ -233,13 +232,10 @@ class RolesController extends \yii\web\Controller
         $this->auth->addChild($this->roles['admin'], $editClient);
         $this->auth->addChild($this->roles['admin'], $deleteClient);
 
-        $this->auth->addChild($this->roles['client'], $viewClient);
         $this->auth->addChild($this->roles['client'], $editOwnerClient);
         
-        $this->auth->addChild($this->roles['user'], $viewClient);
-        $this->auth->addChild($this->roles['user'], $editClient);
-
         $this->auth->addChild($editOwnerClient, $editClient);
+        $this->auth->addChild($editOwnerClient, $viewClient);
 
         return $this;
     }
