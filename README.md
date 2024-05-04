@@ -5,14 +5,14 @@ Bearer Token
 ### Endpoints
 
 # Autenticação
-POST    /api/auth
+### POST    /api/auth
 
 # Usuários
-## POST    /api/users
-## GET     /api/users
-## GET     /api/users/:id
-## PUT     /api/users/:id
-## DELETE  /api/users/:id
+### POST    /api/users
+### GET     /api/users
+### GET     /api/users/:id
+### PUT     /api/users/:id
+### DELETE  /api/users/:id
 
 # Clientes
 ### POST    /api/clientes
