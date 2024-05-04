@@ -27,6 +27,6 @@ GET     /api/produtos
 GET     /api/produtos/cliente?id=:cliente
 
 ### Documentação da API
-Para mais detalhes da documentação, acesse a documentação utilizando o Postman [a link](https://documenter.getpostman.com/view/5545042/2sA3JGeimc)
+Para mais detalhes da documentação, acesse a documentação utilizando o Postman [Documentação](https://documenter.getpostman.com/view/5545042/2sA3JGeimc)
 
 
