@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0
+    restart: always
+    container_name: db
+    tty: true
+    expose:
+      - 3306
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=loja_teste
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - loja_network
+  apploja:
+    build: .
+    image: wildemarbarbosa/apploja
+    container_name: apploja
+    depends_on:
+      - db
+    networks:
+      - loja_network
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./web/css:/var/www/html/web/css
+      - ./web/assets:/var/www/html/web/assets
+      - ./docker/nginx/log:/var/www/log/
+      - ./docker/nginx/conf:/etc/nginx/conf.d
+      - ./docker/nginx/web/index.php:/var/www/html/web/index.php
+    networks:
+      - loja_network
+    ports:
+      - 8080:80
+    depends_on:
+      - apploja
+networks:
+  loja_network:
+    driver: bridge
