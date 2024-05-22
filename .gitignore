@@ -34,3 +34,6 @@ tests/_support/_generated
 
 #vagrant folder
 /.vagrant
+#docker config
+docker/mysql/*
+docker/nginx/log/*
