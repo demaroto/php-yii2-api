@@ -1,4 +1,6 @@
 ### API Store - Yii2
+![alt text](https://github.com/demaroto/php-yii2-api/blob/main/web/api-yii.jpg?raw=true)
+
 Esta API foi desenvolvida em PHP, utilizando o framework Yii 2. Trata-se de um projeto com Authorization
 Bearer Token
 
