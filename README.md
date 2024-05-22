@@ -3,6 +3,13 @@
 
 Esta API foi desenvolvida em PHP, utilizando o framework Yii 2. Trata-se de um projeto com Authorization
 Bearer Token
+# Instalação
+```javascript 1 - Docker Build
+docker-compose build
+```
+```javascript 2 - Docker Run
+docker-compose up -d
+```
 
 ### Endpoints
 
