@@ -24,6 +24,11 @@ docker-compose exec apploja php yii migrate --migrationPath=@yii/rbac/migrations
 #### Adicionar usuário id 1 como admin - Executar apenas uma vez | Remover Rota ou Adicionar Autorização
 [Criar Usuário Admin](http://localhost:8080/roles/add?id=1&role=admin)
 
+### Criar usuário via console
+```javascript Migrations
+docker-compose exec apploja php yii user/create [nome] [e-mail] [password]
+```
+
 # Documentação da API
 Para mais detalhes da documentação, acesse a documentação utilizando o Postman [Documentação](https://documenter.getpostman.com/view/5545042/2sA3JGeimc)
 
