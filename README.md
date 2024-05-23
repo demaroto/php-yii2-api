@@ -19,9 +19,10 @@ docker-compose exec apploja php yii migrate
 ```javascript Migrations 2
 docker-compose exec apploja php yii migrate --migrationPath=@yii/rbac/migrations
 ```
-### Habilitar regras de autorização - Apenas na primeira vez
+#### Habilitar regras de autorização - Executar apenas uma vez | Remover Rota ou Adicionar Autorização
 [Autorização](http://localhost:8080/roles?create=1)
-[Criar Usuário Admin](http://localhost:8080/roles/add?user=1&role=admin)
+#### Adicionar usuário id 1 como admin - Executar apenas uma vez | Remover Rota ou Adicionar Autorização
+[Criar Usuário Admin](http://localhost:8080/roles/add?id=1&role=admin)
 
 # Documentação da API
 Para mais detalhes da documentação, acesse a documentação utilizando o Postman [Documentação](https://documenter.getpostman.com/view/5545042/2sA3JGeimc)
