@@ -13,7 +13,7 @@ class UserController extends Controller
     {
         $client = new Client();
         $requests = [
-            'users' => $client->post('http://localhost:8080/api/users', ['nome' => $nome, 'email' => $email, 'password' => $password])
+            'users' => $client->post('http://nginx/api/users', ['nome' => $nome, 'email' => $email, 'password' => $password])
         ];
         
  
