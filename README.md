@@ -14,10 +14,10 @@ docker-compose up -d
 ```
 ### Executar as migrações do banco
 ```javascript Migrations
-php yii migrate
+docker-compose exec apploja php yii migrate
 ```
 ```javascript Migrations 2
-php yii migrate --migrationPath=@yii/rbac/migrations
+docker-compose exec apploja php yii migrate --migrationPath=@yii/rbac/migrations
 ```
 ### Habilitar regras de autorização - Apenas na primeira vez
 [Autorização](http://localhost:8080/roles?create=1)
